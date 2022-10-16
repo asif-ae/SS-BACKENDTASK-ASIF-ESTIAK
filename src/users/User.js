@@ -87,6 +87,7 @@ class User extends BaseModel {
       return true
     } catch (error) {
       console.log(error)
+      throw new ApolloError('Something went wrong!');
     }
   }
 }
