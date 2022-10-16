@@ -28,6 +28,11 @@ const UserSchema = new Schema({
     type: String,
     default: null,
   },
+  isAuthenticated: {
+    type: Boolean,
+    default: false,
+    required: true,
+  }
 },
 { timestamps: true });
 

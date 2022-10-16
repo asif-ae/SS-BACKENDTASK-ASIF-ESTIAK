@@ -9,8 +9,6 @@ const MovieSchema = new Schema({
   },
   image: {
     type: String,
-    required: true,
-    unique: true,
   },
   storyline : {
     type: String,
@@ -20,46 +18,38 @@ const MovieSchema = new Schema({
     id: {
       type: String,
       required: true,
-      unique: true,
     },
     name: {
       type: String,
       required: true,
-      unique: true,
     },
   }],
   directors: [{
     id: {
       type: String,
       required: true,
-      unique: true,
     },
     name: {
       type: String,
       required: true,
-      unique: true,
     },
   }],
   writers: [{
     id: {
       type: String,
-      unique: true,
     },
     name: {
       type: String,
-      unique: true,
     },
   }],
   stars: [{
     id: {
       type: String,
       required: true,
-      unique: true,
     },
     name: {
       type: String,
       required: true,
-      unique: true,
     },
   }],
   rating: {
