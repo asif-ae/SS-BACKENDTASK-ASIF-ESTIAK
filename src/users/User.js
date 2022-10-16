@@ -58,19 +58,9 @@ class User extends BaseModel {
 
     const user = new UserModel(newData)
     await user.save()
-    const newUser = {
-      id: user.id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      username: user.username,
-    }
 
-    const accessToken = createAccessToken(newUser);
-
-    console.log({newUser});
     return {
-      accessToken
+      id: user.id
     }
   }
 
@@ -87,6 +77,7 @@ class User extends BaseModel {
       return true
     } catch (error) {
       console.log(error)
+      throw new ApolloError('Something went wrong!');
     }
   }
 }

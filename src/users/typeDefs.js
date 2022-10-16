@@ -35,11 +35,15 @@ const typeDefs = gql`
     accessToken: String
   }
 
+  type CreateUserOutput {
+    id: String
+  }
+
   # extend type Query {}
 
   extend type Mutation {
     login(userData: LoginUserInput!): Jwt
-    createUser(userData: CreateUserInput!): Jwt!
+    createUser(userData: CreateUserInput!): CreateUserOutput!
     makeAuthorizedUser(id: String!): Boolean!
   }
 `;

@@ -1,7 +1,7 @@
 const {gql} = require('apollo-server-express');
 
 const typeDefs = gql`
-  type Movie {
+  type MovieAndTVShows {
     id: String!
     title: String!
     image: String
@@ -10,6 +10,8 @@ const typeDefs = gql`
     directors: [String]
     writers: [String]
     stars: [String]
+    provider: String
+    totalEpisodes: Int
     rating: Float
     runtime: String
     releaseDate: String
@@ -25,6 +27,8 @@ const typeDefs = gql`
     directors: [String]
     writers: [String]
     stars: [String]
+    provider: String
+    totalEpisodes: Int
     rating: Float
     runtime: String
     releaseDate: String
@@ -33,12 +37,12 @@ const typeDefs = gql`
   }
 
   extend type Query {
-    getMovies: [Movie]!
-    getOneMovie(id: String!): Movie!
+    getMoviesAndTVShows: [MovieAndTVShows]!
+    getOneMovieOrTVShows(id: String!): MovieAndTVShows!
   }
 
   extend type Mutation {
-    createMovie(movieData: CreateMovieInput!): Movie!
+    createMovieAndTVShows(movieOrTVShowsData: CreateMovieInput!): MovieAndTVShows!
   }
 `;
 

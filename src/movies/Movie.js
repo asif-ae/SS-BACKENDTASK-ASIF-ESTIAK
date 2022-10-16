@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const BaseModel = require("../BaseModel")
-const MovieModel = require('../../models/Movie')
+const MoviesAndTVShowsModel = require('../../models/MoviesAndTVShows')
 const UserModel = require('../../models/User')
 const { ApolloError } = require("apollo-server-express")
 const { UNAUTHORIZED, RESOURCE_NOT_FOUND } = require('../../utils/errorCode')
@@ -8,7 +8,7 @@ const { UNAUTHORIZED, RESOURCE_NOT_FOUND } = require('../../utils/errorCode')
 class Movie extends BaseModel {
 
   static async getMovies(_, args) {
-    const movie = await MovieModel.find({}).select('id title image storyline');
+    const movie = await MoviesAndTVShowsModel.find({}).select('id title image storyline');
     if (!movie) throw new ApolloError('There is not movie present in the database!');
 
     return movie
@@ -22,7 +22,7 @@ class Movie extends BaseModel {
       id = "";
       throw new ApolloError(UNAUTHORIZED);
     }
-    const movie = await MovieModel.findById(id);
+    const movie = await MoviesAndTVShowsModel.findById(id);
     console.log(movie);
     if (!movie) throw new ApolloError('This movie is not present in the database!', RESOURCE_NOT_FOUND);
 
@@ -39,26 +39,28 @@ class Movie extends BaseModel {
   }
 
   static async createMovie(_, args, context) {
-    let { movieData } = args;
+    let { movieOrTVShowsData } = args;
 
     const user = await UserModel.findById(context?.req?.verifiedUser?.id);
+    console.log(!user || !user?.isAuthenticated);
     if (!user || !user?.isAuthenticated) {
-      movieData = {};
+      movieOrTVShowsData = {};
       throw new ApolloError(UNAUTHORIZED);
     }
 
-    const oldMovieTitle = await MovieModel.findOne({ title: movieData?.title }).exec();
+    const oldMovieTitle = await MoviesAndTVShowsModel.findOne({ title: movieOrTVShowsData?.title }).exec();
     if (oldMovieTitle) throw new ApolloError('This movie already present in the database!', UNAUTHORIZED);
+    console.log(movieOrTVShowsData)
 
     const newData = {
-      ...movieData,
-      genres: movieData.genres.map((r) => { return { id: r, name: r } }),
-      directors: movieData.directors.map((r) => { return { id: r, name: r } }),
-      writers: movieData.writers.map((r) => { return { id: r, name: r } }),
-      stars: movieData.stars.map((r) => { return { id: r, name: r } }),
+      ...movieOrTVShowsData,
+      genres: movieOrTVShowsData.genres.map((r) => { return { id: r, name: r } }),
+      directors: movieOrTVShowsData.directors.map((r) => { return { id: r, name: r } }),
+      writers: movieOrTVShowsData.writers.map((r) => { return { id: r, name: r } }),
+      stars: movieOrTVShowsData.stars.map((r) => { return { id: r, name: r } }),
     }
 
-    const movie = new MovieModel(newData)
+    const movie = new MoviesAndTVShowsModel(newData)
     await movie.save()
 
     const newCreatedData = {
