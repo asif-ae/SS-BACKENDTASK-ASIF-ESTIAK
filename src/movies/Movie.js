@@ -39,23 +39,25 @@ class Movie extends BaseModel {
   }
 
   static async createMovie(_, args, context) {
-    let { movieData } = args;
+    let { movieOrTVShowsData } = args;
 
     const user = await UserModel.findById(context?.req?.verifiedUser?.id);
+    console.log(!user || !user?.isAuthenticated);
     if (!user || !user?.isAuthenticated) {
-      movieData = {};
+      movieOrTVShowsData = {};
       throw new ApolloError(UNAUTHORIZED);
     }
 
-    const oldMovieTitle = await MoviesAndTVShowsModel.findOne({ title: movieData?.title }).exec();
+    const oldMovieTitle = await MoviesAndTVShowsModel.findOne({ title: movieOrTVShowsData?.title }).exec();
     if (oldMovieTitle) throw new ApolloError('This movie already present in the database!', UNAUTHORIZED);
+    console.log(movieOrTVShowsData)
 
     const newData = {
-      ...movieData,
-      genres: movieData.genres.map((r) => { return { id: r, name: r } }),
-      directors: movieData.directors.map((r) => { return { id: r, name: r } }),
-      writers: movieData.writers.map((r) => { return { id: r, name: r } }),
-      stars: movieData.stars.map((r) => { return { id: r, name: r } }),
+      ...movieOrTVShowsData,
+      genres: movieOrTVShowsData.genres.map((r) => { return { id: r, name: r } }),
+      directors: movieOrTVShowsData.directors.map((r) => { return { id: r, name: r } }),
+      writers: movieOrTVShowsData.writers.map((r) => { return { id: r, name: r } }),
+      stars: movieOrTVShowsData.stars.map((r) => { return { id: r, name: r } }),
     }
 
     const movie = new MoviesAndTVShowsModel(newData)

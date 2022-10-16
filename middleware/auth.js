@@ -10,7 +10,7 @@ const authenticate = async (req, res, next) => {
     // console.log('Verification succeed!', verification)
     next()
   } catch (error) {
-    console.log('Verification failed!')
+    // console.log('Verification failed!')
     next()
   }
 }
